@@ -34,13 +34,13 @@ management:
 
 info:
   app:
-    name: spanner-pollar-convereter-publisher
-    description: Google cloud spanner poller converter publisher
+    name: demo-change-spanner
+    description: Google cloud spanner 
     version: 1.0.0
     java-vendor: ${java.specification.vendor}
 
 app:
-  topic.name: topic-1
+  topic.name: spannertopic
 ---
 spring.profiles: dev
 

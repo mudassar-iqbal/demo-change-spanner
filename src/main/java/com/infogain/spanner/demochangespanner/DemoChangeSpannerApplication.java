@@ -1,19 +1,13 @@
 package com.infogain.spanner.demochangespanner;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Properties;
-import java.util.stream.StreamSupport;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.core.env.AbstractEnvironment;
-import org.springframework.core.env.EnumerablePropertySource;
 import org.springframework.core.env.Environment;
-import org.springframework.core.env.MutablePropertySources;
 
 import com.google.cloud.spanner.DatabaseClient;
 import com.google.cloud.spanner.DatabaseId;
@@ -23,6 +17,7 @@ import com.google.cloud.spanner.publisher.SpannerDatabaseChangeEventPublisher;
 import com.google.cloud.spanner.publisher.SpannerToJsonFactory;
 import com.google.cloud.spanner.watcher.SpannerDatabaseChangeWatcher;
 import com.google.cloud.spanner.watcher.SpannerDatabaseTailer;
+import com.infogain.spanner.demochangespanner.component.SampleData;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -84,6 +79,8 @@ public class DemoChangeSpannerApplication {
 	    String subscription = "spannertopic-sub";
 	    SpannerOptions options = SpannerOptions.newBuilder().build();
 	    String project = options.getProjectId();
+	    
+	    
 	    // Create a connection to a Spanner database.
 	    log.info(
 	        String.format(
@@ -91,6 +88,9 @@ public class DemoChangeSpannerApplication {
 	            options.getProjectId(), instance, database));
 	    Spanner spanner = options.getService();
 	    DatabaseId databaseId = DatabaseId.of(project, instance, database);
+	    log.info("Checking/creating sample database...");
+	    SampleData.createSampleDatabase(spanner, databaseId);
+	    
 		SpannerDatabaseChangeWatcher watcher =
 		        SpannerDatabaseTailer.newBuilder(spanner, databaseId).allTables().build();
 		// Then create a change publisher using the change watcher.
